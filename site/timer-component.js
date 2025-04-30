@@ -7,57 +7,45 @@ class TimerComponent extends HTMLElement {
 
     const shadowRoot = this.attachShadow({ mode: 'open' }); // Attach shadow DOM
 
-    // Create a style element
-    const style = document.createElement('style');
-    style.textContent = `
-:host {
-  display: inline-block;
-  font-family: Times, serif;
-  font-size: 1.8rem;
-  color: #333;
-}
-.timer {
-  font-weight: bold;
-  display: inline-block;
-  color: rgb(150, 37, 0);
-}
-.timer.running {
-  color:rgb(0, 82, 163);
-}
-`;
-    shadowRoot.appendChild(style); // Append the style to the shadow DOM
+    // Define the template
+    const template = document.createElement('template');
+    template.innerHTML = `
+      <style>
+        :host {
+          display: block;
+          color: #333;
+        }
+        .timer {
+          font-weight: bold;
+          display: inline-block;
+          color: rgb(150, 37, 0);
+        }
+        .timer.running {
+          color: rgb(0, 82, 163);
+        }
+        button {
+          margin: 0 5px;
+          padding: 5px 10px;
+          font-size: 1rem;
+        }
+      </style>
+      <label>Timer: </label>
+      <div class="timer">Not set</div>
+      <div id="controls">
+        <button id="start">Start</button>
+        <button id="stop">Stop</button>
+        <button id="reset">Reset</button>
+      </div>
+    `;
 
-    const label = document.createElement('label');
-    label.textContent = 'Timer: ';
-    shadowRoot.appendChild(label);
-    // Create a div element for the timer
-    this.timerDiv = document.createElement('div');
-    this.timerDiv.classList.add('timer');
-    this.timerDiv.textContent = `Not set`;
-    shadowRoot.appendChild(this.timerDiv); // Append the timer div to the shadow DOM
+    // Clone the template and append it to the shadow DOM
+    shadowRoot.appendChild(template.content.cloneNode(true));
 
-    // Buttons
-    const buttonDiv = document.createElement('div');
-    const startButton = document.createElement('button');
-    startButton.textContent = 'Start';
-    startButton.addEventListener('click', () => {
-      this.start();
-    });
-    buttonDiv.appendChild(startButton);
-    const stopButton = document.createElement('button');
-    stopButton.textContent = 'Stop';
-    stopButton.addEventListener('click', () => {
-      this.stop();
-    });
-    buttonDiv.appendChild(stopButton);
-    const resetButton = document.createElement('button');
-    resetButton.textContent = 'Reset';
-    resetButton.addEventListener('click', () => {
-      this.reset();
-    });
-    buttonDiv.appendChild(resetButton);
-
-    shadowRoot.appendChild(buttonDiv); // Append the reset button to the shadow DOM
+    // Get references to elements in the shadow DOM
+    this.timerDiv = shadowRoot.querySelector('.timer');
+    shadowRoot.querySelector('#start').addEventListener('click', () => this.start());
+    shadowRoot.querySelector('#stop').addEventListener('click', () => this.stop());
+    shadowRoot.querySelector('#reset').addEventListener('click', () => this.reset());
   }
 
   static get observedAttributes() {
