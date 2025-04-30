@@ -1,0 +1,18 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+header {
+  background-color: #00274d; /* Dark blue background */
+  color: white; /* White text */
+  padding: 1rem;
+  text-align: center;
+}
+
+main {
+  max-width: 800px; /* Single column width */
+  margin: 2rem auto; /* Centered with margins on large screens */
+  padding: 0 1rem; /* Padding for smaller screens */
+}

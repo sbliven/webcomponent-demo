@@ -1,0 +1,5 @@
+* {
+    root * /srv/
+    file_server
+    tls internal
+}
