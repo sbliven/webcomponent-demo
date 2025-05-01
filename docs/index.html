@@ -14,8 +14,22 @@
   <main>
     <p>Welcome to the Web Component Demo. This is a simple example of a website layout using HTML and CSS.</p>
 
-    <h2>Timer</h2>
-    <timer-component duration="5"></timer-component>
+    <h2>Timers</h2>
+    <h3>With controls</h3>
+    <timer-component duration="5">
+      <template>
+        <label>Timer: </label>
+        <div class="timer">Not set</div>
+        <div id="controls">
+          <button id="start">Start</button>
+          <button id="reset">Reset</button>
+          <button id="stop">Stop</button>
+        </div>
+      </template>
+    </timer-component>
+    <h3>Without controls</h3>
+    <timer-component duration="30"></timer-component>
+
   </main>
 </body>
 </html>

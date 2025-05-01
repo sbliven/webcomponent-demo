@@ -5,51 +5,54 @@ class TimerComponent extends HTMLElement {
     this.time = this.duration;
     this.intervalId = null; // returned by setInterval
 
-    const shadowRoot = this.attachShadow({ mode: 'open' }); // Attach shadow DOM
+    const shadowRoot = this.attachShadow({
+      mode: 'open'
+    }); // Attach shadow DOM
 
     // Define the template
-    const template = document.createElement('template');
-    template.innerHTML = `
-      <style>
-        :host {
-          display: block;
-          color: #333;
-        }
-        .timer {
-          font-weight: bold;
-          display: inline-block;
-          color: rgb(150, 37, 0);
-        }
-        .timer.running {
-          color: rgb(0, 82, 163);
-        }
-        button {
-          margin: 0 5px;
-          padding: 5px 10px;
-          font-size: 1rem;
-        }
-      </style>
-      <label>Timer: </label>
-      <div class="timer">Not set</div>
-      <div id="controls">
-        <button id="start">Start</button>
-        <button id="stop">Stop</button>
-        <button id="reset">Reset</button>
-      </div>
+    const style = document.createElement('style');
+    style.innerHTML = `
+      :host {
+        display: block;
+        color: #333;
+      }
+      .timer {
+        font-weight: bold;
+        display: inline-block;
+        color: rgb(150, 37, 0);
+      }
+      .timer.running {
+        color: rgb(0, 82, 163);
+      }
+      button {
+        margin: 0 5px;
+        padding: 5px 10px;
+        font-size: 1rem;
+      }
     `;
 
     // Clone the template and append it to the shadow DOM
-    shadowRoot.appendChild(template.content.cloneNode(true));
-
-    // Get references to elements in the shadow DOM
+    shadowRoot.appendChild(style);
+    const template = this.querySelector("template");
+    if (template) {
+      shadowRoot.appendChild(template.content.cloneNode(true));
+    }
     this.timerDiv = shadowRoot.querySelector('.timer');
-    shadowRoot.querySelector('#start').addEventListener('click', () => this.start());
-    shadowRoot.querySelector('#stop').addEventListener('click', () => this.stop());
-    shadowRoot.querySelector('#reset').addEventListener('click', () => this.reset());
+    if (!this.timerDiv) {
+      console.log('No timer div found, creating one');
+      this.timerDiv = document.createElement('div');
+      this.timerDiv.classList.add('timer');
+      this.timerDiv.textContent = `Not set`;
+      shadowRoot.appendChild(this.timerDiv);
+    }
+    // Get references to elements in the shadow DOM
+    shadowRoot.querySelectorAll('#start').forEach((b) => b.addEventListener('click', () => this.start()));
+    shadowRoot.querySelectorAll('#stop').forEach((b) => b.addEventListener('click', () => this.stop()));
+    shadowRoot.querySelectorAll('#reset').forEach((b) => b.addEventListener('click', () => this.reset()));
   }
 
   static get observedAttributes() {
-    return ['duration','time'];
+    return ['duration', 'time'];
   }
 
   attributeChangedCallback(property, oldValue, newValue) {
@@ -79,7 +82,7 @@ class TimerComponent extends HTMLElement {
   }
 
   start() {
-    if (this.intervalId ) {
+    if (this.intervalId) {
       clearInterval(this.intervalId);
     }
     this.timerDiv.classList.add('running');
